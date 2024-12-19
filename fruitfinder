@@ -194,7 +194,7 @@ end
 local function moveToTarget(target, callback)
     local targetPosition = target.WorldPivot.Position
     local distance = (humanoidRootPart.Position - targetPosition).Magnitude
-    local duration = math.max(distance / 30, 5)
+    local duration = math.max(distance / 50, 5)
     local tweenInfo = TweenInfo.new(duration, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
     local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = CFrame.new(targetPosition)})
     tween:Play()
@@ -206,7 +206,7 @@ end
 local function moveToTarget2(target, callback)
     local targetPosition = target.Fruit.Fruit.CFrame.Position
     local distance = (humanoidRootPart.Position - targetPosition).Magnitude
-    local duration = math.max(distance / 30, 5)
+    local duration = math.max(distance / 50, 5)
     local tweenInfo = TweenInfo.new(duration, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
     local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = CFrame.new(targetPosition)})
     tween:Play()
