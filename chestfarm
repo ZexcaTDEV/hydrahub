@@ -1,0 +1,235 @@
+local team = _G.config.team
+local minplayerserver = _G.config.minplayerserver
+local usewebhook = _G.config.usewebhook
+local webhook = _G.config.webhook
+
+if team == "Pirates" then
+    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("SetTeam", "Pirates")
+else
+    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("SetTeam", "Marines")
+end
+wait(5)
+local player = game.Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = playerGui
+screenGui.Name = "NotificationScreen"
+
+local imageLabel = Instance.new("ImageLabel")
+imageLabel.Parent = screenGui
+imageLabel.Size = UDim2.new(0, 400, 0, 400)
+imageLabel.Position = UDim2.new(0.5, -200, 0.5, -200)
+imageLabel.Image = "rbxassetid://114774711385433"
+imageLabel.BackgroundTransparency = 1
+imageLabel.ImageTransparency = 1
+
+local textLabel = Instance.new("TextLabel")
+textLabel.Parent = screenGui
+textLabel.Size = UDim2.new(0, 400, 0, 50)
+textLabel.Position = UDim2.new(0.5, -200, 0.5, 160)
+textLabel.Text = "Hydra Hub"
+textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+textLabel.TextSize = 35
+textLabel.BackgroundTransparency = 1
+textLabel.TextTransparency = 1
+textLabel.Font = Enum.Font.ArialBold
+
+local TweenService = game:GetService("TweenService")
+local tweenInfoIn = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
+local tweenInfoOut = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.In)
+local tweenInfoTextIn = TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
+local tweenInfoTextOut = TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.In)
+local tweenInfoMoveImage = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
+local tweenInfoRestoreImage = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.In)
+
+local tweenIn = TweenService:Create(imageLabel, tweenInfoIn, {ImageTransparency = 0})
+local tweenOut = TweenService:Create(imageLabel, tweenInfoOut, {ImageTransparency = 1})
+local tweenTextIn = TweenService:Create(textLabel, tweenInfoTextIn, {TextTransparency = 0})
+local tweenTextOut = TweenService:Create(textLabel, tweenInfoTextOut, {TextTransparency = 1})
+local tweenMoveImageUp = TweenService:Create(imageLabel, tweenInfoMoveImage, {Position = UDim2.new(0.5, -200, 0.5, -250)})
+local tweenMoveImageDown = TweenService:Create(imageLabel, tweenInfoRestoreImage, {Position = UDim2.new(0.5, -200, 0.5, -200)})
+
+local function showAndHideImage()
+    tweenIn:Play()
+    tweenIn.Completed:Connect(function()
+        wait(1)
+        tweenMoveImageUp:Play()
+
+        tweenTextIn:Play()
+        tweenTextIn.Completed:Connect(function()
+            wait(2)
+
+            tweenTextOut:Play()
+            tweenTextOut.Completed:Connect(function()
+
+                tweenMoveImageDown:Play()
+                tweenMoveImageDown.Completed:Connect(function()
+                    wait(1)
+
+                    tweenOut:Play()
+                end)
+            end)
+        end)
+    end)
+end
+
+showAndHideImage()
+wait(9)
+local TweenService = game:GetService("TweenService")
+local Workspace = game:GetService("Workspace")
+local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
+local TeleportService = game:GetService("TeleportService")
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+loadstring(game:HttpGet("https://raw.githubusercontent.com/CelestialExecutor4/celestial/refs/heads/main/NotificationService", true))()
+local function notify(title, message)
+    Notify(title, message, 7, { backgroundColor = Color3.fromRGB(30, 30, 30), borderRadius = 15 })
+end
+
+local function sendWebhook(title, description)
+    if usewebhook then
+        local data = {
+            embeds = {
+                {
+                    title = title,
+                    description = description,
+                    color = tonumber("0xff5f2e"),
+                    thumbnail = {
+                        url = "https://media.discordapp.net/attachments/1150466398934548652/1319078489042976850/Hydra_Esports_BGMI_allmode.png?ex=6764a713&is=67635593&hm=c8b1f941ba3b069648ed5a9d656692b256607037d87ea3ef82908b5b53a4e71f&=&format=webp&quality=lossless&width=336&height=350"
+                    }
+                }
+            }
+        }
+        local jsonData = HttpService:JSONEncode(data)
+        game:HttpPost(webhook, jsonData, Enum.HttpContentType.ApplicationJson)
+    end
+end
+
+local function sendWebhook2(title, description)
+    if usewebhook then
+        local data = {
+            embeds = {
+                {
+                    title = title,
+                    description = description,
+                    color = tonumber("0x352eff"),
+                    thumbnail = {
+                        url = "https://media.discordapp.net/attachments/1150466398934548652/1319078489042976850/Hydra_Esports_BGMI_allmode.png?ex=6764a713&is=67635593&hm=c8b1f941ba3b069648ed5a9d656692b256607037d87ea3ef82908b5b53a4e71f&=&format=webp&quality=lossless&width=336&height=350"
+                    }
+                }
+            }
+        }
+        local jsonData = HttpService:JSONEncode(data)
+        game:HttpPost(webhook, jsonData, Enum.HttpContentType.ApplicationJson)
+    end
+end
+
+local function getRandomServer()
+    local serverListUrl = "https://games.roblox.com/v1/games/2753915549/servers/Public?cursor=&sortOrder=Asc&excludeFullGames=true"
+    if minplayerserver then
+        serverListUrl = "https://games.roblox.com/v1/games/2753915549/servers/Public?cursor=&sortOrder=Asc&excludeFullGames=true"
+    else
+        serverListUrl = "https://games.roblox.com/v1/games/2753915549/servers/Public?cursor=&sortOrder=Desc&excludeFullGames=true"
+    end
+    local success, response = pcall(function()
+        return game:HttpGet(serverListUrl)
+    end)
+
+    if success then
+        local servers = HttpService:JSONDecode(response).data
+        local availableServers = {}
+
+        for _, server in ipairs(servers) do
+            if server.playing < server.maxPlayers and server.id ~= game.JobId then
+                table.insert(availableServers, server.id)
+            end
+        end
+
+        if #availableServers > 0 then
+            return availableServers[math.random(1, #availableServers)]
+        else
+            notify("Error", "No new server to teleport")
+        end
+    else
+        notify("Error", "Failed to get server list: " .. response)
+    end
+end
+
+local function teleportToRandomServer()
+    notify("Server found", "A new server has been found, teleporting")
+    sendWebhook("Chest farm (HYDRA HUB)", "Teleporting to new server...")
+    delay(5, function()
+        local serverId = getRandomServer()
+        if serverId then
+            TeleportService:TeleportToPlaceInstance(2753915549, serverId, player)
+        end
+    end)
+end
+
+local function moveToTarget(target, callback)
+    local targetPosition = target.WorldPivot.Position
+    local distance = (humanoidRootPart.Position - targetPosition).Magnitude
+    local duration = math.max(distance / 100, 5)
+    local tweenInfo = TweenInfo.new(duration, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
+    local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = CFrame.new(targetPosition)})
+    tween:Play()
+    tween.Completed:Connect(function()
+        wait(2)
+        if callback then
+            callback()
+        end
+    end)
+end
+
+
+
+local function moveThroughChests()
+    local chestModelsFolder = Workspace:FindFirstChild("ChestModels")
+    if not chestModelsFolder then
+        print("ChestModels folder not found in Workspace.")
+        return
+    end
+    local function processChests()
+      local children = chestModelsFolder:GetChildren()
+      if #children == 0 then
+        print("No chests to process.")
+        notify("Chest farm", "Teleported to all chests.")
+        sendWebhook("Chest farm (HYDRA HUB)", "Farming finished, starting server hopping.")
+        wait(2)
+        teleportToRandomServer()
+        return
+      end
+
+      local index = 1
+
+      local function processNextChild()
+        if index > #children then
+            print("All chests processed. Rechecking for new chests...")
+            task.wait(1)
+            processChests()
+            return
+        end
+
+        local child = children[index]
+        index += 1
+        if child and child.Parent == chestModelsFolder then
+            notify("Chest farm", "New chest hooked " .. child.Name)
+            sendWebhook2("Chest farm (HYDRA HUB)", "New chest hooked **" .. child.Name .. "**")
+            wait(1)
+            moveToTarget(child, processNextChild)
+        else
+            print("Chest " .. (child and child.Name or "unknown") .. " no longer exists. Skipping...")
+            processNextChild()
+        end
+      end
+
+      processNextChild()
+    end
+    processChests()
+end
+notify("Welcome to Hydra", player.Name .. " thanks for using this chest farm.")
+sendWebhook("Chest farm (HYDRA HUB)", "Chest farming started!")
+wait(2)
+moveThroughChests()
