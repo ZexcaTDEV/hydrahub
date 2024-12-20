@@ -40,7 +40,7 @@ local function sendWebhook(title, description)
             }
         }
         local jsonData = HttpService:JSONEncode(data)
-        game:HttpPost(webhook, jsonData, Enum.HttpContentType.ApplicationJson)
+        HttpPost(webhook, jsonData, Enum.HttpContentType.ApplicationJson)
     end
 end
 
@@ -59,7 +59,7 @@ local function sendWebhook2(title, description)
             }
         }
         local jsonData = HttpService:JSONEncode(data)
-        game:HttpPost(webhook, jsonData, Enum.HttpContentType.ApplicationJson)
+        HttpPost(webhook, jsonData, Enum.HttpContentType.ApplicationJson)
     end
 end
 
