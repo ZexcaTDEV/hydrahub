@@ -13,6 +13,7 @@ wait(3)
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/CelestialExecutor4/celestial/refs/heads/main/NotificationService", true))()
 
+local TweenService = game:GetService("TweenService")
 local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
 local Players = game:GetService("Players")
